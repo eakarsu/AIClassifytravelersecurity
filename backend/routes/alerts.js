@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { body, validationResult } = require('express-validator');
 const { pool } = require('../db/init');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -54,7 +55,27 @@ router.get('/:id', async (req, res) => {
 });
 
 // POST create alert
-router.post('/', async (req, res) => {
+const alertCreateValidation = [
+  body('title').notEmpty().withMessage('title is required').isString().isLength({ max: 500 }),
+  body('description').notEmpty().withMessage('description is required').isString().isLength({ max: 5000 }),
+  body('severity')
+    .notEmpty().withMessage('severity is required')
+    .isIn(['critical', 'high', 'medium', 'low']).withMessage('severity must be critical, high, medium, or low'),
+  body('category').optional().isString().isLength({ max: 100 }),
+  body('region').optional().isString().isLength({ max: 200 }),
+  body('country').optional().isString().isLength({ max: 100 }),
+  body('city').optional().isString().isLength({ max: 100 }),
+  body('source').optional().isString().isLength({ max: 200 }),
+  body('status').optional().isString().isLength({ max: 50 }),
+  body('latitude').optional().isFloat({ min: -90, max: 90 }).withMessage('Invalid latitude'),
+  body('longitude').optional().isFloat({ min: -180, max: 180 }).withMessage('Invalid longitude'),
+  body('ai_risk_score').optional().isInt({ min: 0, max: 100 }).withMessage('ai_risk_score must be 0-100'),
+];
+
+router.post('/', alertCreateValidation, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
   try {
     const {
       title, description, severity, category, region, country, city,

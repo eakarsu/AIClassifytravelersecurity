@@ -1,0 +1,104 @@
+{
+  "project": "AIClassifytravelersecurity",
+  "marker": "// === Batch 01 Gaps & Frontend Mounts ===",
+  "features": [
+    {
+      "slug": "agentic-duty-of-care-coordinator-monitoring-all-in",
+      "component": "AgenticDutyOfCareCoordinatorMonitoringAllInPage",
+      "label": "Agentic duty-of-care coordinator monitoring all in-trip employees in real time",
+      "endpoint": "/api/cf-agentic-duty-of-care-coordinator-monitoring-all-in",
+      "kind": "cfs"
+    },
+    {
+      "slug": "rag-over-country-security-briefings-and-historical",
+      "component": "RagOverCountrySecurityBriefingsAndHistoricalPage",
+      "label": "RAG over country security briefings and historical incident data",
+      "endpoint": "/api/cf-rag-over-country-security-briefings-and-historical",
+      "kind": "cfs"
+    },
+    {
+      "slug": "real-time-geofence-streaming-with-auto-escalation-",
+      "component": "RealTimeGeofenceStreamingWithAutoEscalationPage",
+      "label": "Real-time geofence streaming with auto-escalation playbooks",
+      "endpoint": "/api/cf-real-time-geofence-streaming-with-auto-escalation-",
+      "kind": "cfs"
+    },
+    {
+      "slug": "white-label-deployment-for-corporate-travel-securi",
+      "component": "WhiteLabelDeploymentForCorporateTravelSecuriPage",
+      "label": "White-label deployment for corporate travel security teams",
+      "endpoint": "/api/cf-white-label-deployment-for-corporate-travel-securi",
+      "kind": "cfs"
+    },
+    {
+      "slug": "ainew-js-scaffold-but-0-mounted-chat-style-ai-endp",
+      "component": "AinewJsScaffoldBut0MountedChatStyleAiEndpPage",
+      "label": "aiNew.js scaffold but 0 mounted /chat-style AI endpoints",
+      "endpoint": "/api/gap-ainew-js-scaffold-but-0-mounted-chat-style-ai-endp",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-ai-ingest-of-news-intel-feeds-to-auto-update-ad",
+      "component": "NoAiIngestOfNewsIntelFeedsToAutoUpdateAdPage",
+      "label": "No AI ingest of news/intel feeds to auto-update advisories",
+      "endpoint": "/api/gap-no-ai-ingest-of-news-intel-feeds-to-auto-update-ad",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-ai-itinerary-risk-scoring-engine-behind-ui-page",
+      "component": "NoAiItineraryRiskScoringEngineBehindUiPage",
+      "label": "No AI itinerary risk-scoring engine behind UI page",
+      "endpoint": "/api/gap-no-ai-itinerary-risk-scoring-engine-behind-ui-page",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-ai-geofence-anomaly-detection-wired-to-traveler",
+      "component": "NoAiGeofenceAnomalyDetectionWiredToTravelerPage",
+      "label": "No AI geofence-anomaly detection wired to traveler positions",
+      "endpoint": "/api/gap-no-ai-geofence-anomaly-detection-wired-to-traveler",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-ai-medical-risk-assessment-behind-ui-page",
+      "component": "NoAiMedicalRiskAssessmentBehindUiPage",
+      "label": "No AI medical-risk assessment behind UI page",
+      "endpoint": "/api/gap-no-ai-medical-risk-assessment-behind-ui-page",
+      "kind": "gap"
+    },
+    {
+      "slug": "notification-routes-exist-but-no-sms-push-delivery",
+      "component": "NotificationRoutesExistButNoSmsPushDeliveryPage",
+      "label": "Notification routes exist but no SMS/push delivery channel",
+      "endpoint": "/api/gap-notification-routes-exist-but-no-sms-push-delivery",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-direct-hr-travel-booking-api-client-concur-egen",
+      "component": "NoDirectHrTravelBookingApiClientConcurEgenPage",
+      "label": "No direct HR/travel-booking API client (Concur, Egencia)",
+      "endpoint": "/api/gap-no-direct-hr-travel-booking-api-client-concur-egen",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-mobile-traveler-app-with-sos-button-only-api-en",
+      "component": "NoMobileTravelerAppWithSosButtonOnlyApiEnPage",
+      "label": "No mobile traveler app with SOS button (only API endpoint)",
+      "endpoint": "/api/gap-no-mobile-traveler-app-with-sos-button-only-api-en",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-integration-with-international-assistance-provi",
+      "component": "NoIntegrationWithInternationalAssistanceProviPage",
+      "label": "No integration with international assistance providers (ISOS, GlobalRescue)",
+      "endpoint": "/api/gap-no-integration-with-international-assistance-provi",
+      "kind": "gap"
+    },
+    {
+      "slug": "no-multi-tenant-org-department-hierarchy",
+      "component": "NoMultiTenantOrgDepartmentHierarchyPage",
+      "label": "No multi-tenant org/department hierarchy",
+      "endpoint": "/api/gap-no-multi-tenant-org-department-hierarchy",
+      "kind": "gap"
+    }
+  ]
+}

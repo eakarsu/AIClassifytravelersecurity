@@ -5,16 +5,36 @@ const { authenticateToken } = require('../middleware/auth');
 
 router.use(authenticateToken);
 
-// GET all trips (joined with travelers for traveler name)
+// GET all trips (paginated, joined with travelers for traveler name)
 router.get('/', async (req, res) => {
   try {
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+
+    const countResult = await pool.query('SELECT COUNT(*) FROM trips');
+    const total = parseInt(countResult.rows[0].count) || 0;
+
     const result = await pool.query(
       `SELECT t.*, tr.first_name AS traveler_first_name, tr.last_name AS traveler_last_name
        FROM trips t
        LEFT JOIN travelers tr ON t.traveler_id = tr.id
-       ORDER BY t.created_at DESC`
+       ORDER BY t.created_at DESC
+       LIMIT $1 OFFSET $2`,
+      [limit, offset]
     );
-    res.json(result.rows);
+
+    res.json({
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        total_pages: Math.ceil(total / limit),
+        has_next: page * limit < total,
+        has_prev: page > 1,
+      }
+    });
   } catch (error) {
     console.error('Error fetching trips:', error);
     res.status(500).json({ error: 'Internal server error' });

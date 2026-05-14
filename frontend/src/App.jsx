@@ -16,6 +16,16 @@ import Assessments from './pages/Assessments';
 import Threats from './pages/Threats';
 import Templates from './pages/Templates';
 import Zones from './pages/Zones';
+import RealTimeThreat from './pages/RealTimeThreat';
+import EvacuationPlanner from './pages/EvacuationPlanner';
+import MedicalRisk from './pages/MedicalRisk';
+import CyberSecurity from './pages/CyberSecurity';
+import ItineraryRiskScore from './pages/ItineraryRiskScore';
+import Geofence from './pages/Geofence';
+import SOS from './pages/SOS';
+import Exports from './pages/Exports';
+import Notifications from './pages/Notifications';
+import Webhooks from './pages/Webhooks';
 
 const navItems = [
   { section: 'Overview' },
@@ -35,6 +45,19 @@ const navItems = [
   { path: '/contacts', label: 'Emergency Contacts', icon: '📞' },
   { path: '/templates', label: 'Comm Templates', icon: '📨' },
   { path: '/zones', label: 'Geofencing Zones', icon: '📍' },
+  { path: '/sos', label: 'SOS Center', icon: '🚨' },
+  { path: '/geofence', label: 'Geofence Triggers', icon: '🛰️' },
+  { section: 'AI Tools' },
+  { path: '/real-time-threat', label: 'Real-Time Threat', icon: '⚡' },
+  { path: '/evacuation-planner', label: 'Evacuation Planner', icon: '🗺️' },
+  { path: '/medical-risk', label: 'Medical Risk', icon: '🩺' },
+  { path: '/cyber-security', label: 'Cyber Security', icon: '🔐' },
+  { path: '/itinerary-risk-score', label: 'Itinerary Risk Score', icon: '📈' },
+  { section: 'Reports' },
+  { path: '/exports', label: 'Data Exports', icon: '📤' },
+  { section: 'System' },
+  { path: '/notifications', label: 'Notifications', icon: '🔔' },
+  { path: '/webhooks', label: 'Webhooks', icon: '🪝' },
 ];
 
 function App() {
@@ -137,6 +160,16 @@ function App() {
             <Route path="/threats" element={<Threats />} />
             <Route path="/templates" element={<Templates />} />
             <Route path="/zones" element={<Zones />} />
+            <Route path="/real-time-threat" element={<RealTimeThreat />} />
+            <Route path="/evacuation-planner" element={<EvacuationPlanner />} />
+            <Route path="/medical-risk" element={<MedicalRisk />} />
+            <Route path="/cyber-security" element={<CyberSecurity />} />
+            <Route path="/itinerary-risk-score" element={<ItineraryRiskScore />} />
+            <Route path="/geofence" element={<Geofence />} />
+            <Route path="/sos" element={<SOS />} />
+            <Route path="/exports" element={<Exports />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/webhooks" element={<Webhooks />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
           </Routes>
         </div>
