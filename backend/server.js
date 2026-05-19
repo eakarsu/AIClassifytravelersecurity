@@ -79,6 +79,8 @@ app.use('/api/country-briefing-rag', require('./routes/countryBriefingRag')); //
 app.use('/api/geofence-stream', require('./routes/geofenceStream')); // apply pass 6 — audit custom suggestion
 
 app.use('/api/corporate-travel-white-label', require('./routes/corporateTravelWhiteLabel')); // apply pass 6 — audit custom suggestion
+
+app.use('/api/custom-views', require('./routes/customViews')); // Custom Views: airport traveler security classification (4 endpoints)
 app.listen(PORT, () => {
       console.log(`Backend server running on port ${PORT}`);
     });

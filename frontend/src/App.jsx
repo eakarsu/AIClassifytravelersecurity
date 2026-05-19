@@ -26,6 +26,7 @@ import SOS from './pages/SOS';
 import Exports from './pages/Exports';
 import Notifications from './pages/Notifications';
 import Webhooks from './pages/Webhooks';
+import CustomViewsPage from './pages/CustomViewsPage';
 
 const navItems = [
   { section: 'Overview' },
@@ -58,6 +59,8 @@ const navItems = [
   { section: 'System' },
   { path: '/notifications', label: 'Notifications', icon: '🔔' },
   { path: '/webhooks', label: 'Webhooks', icon: '🪝' },
+  { section: 'Screening Views' },
+  { path: '/custom-views', label: 'Screening Views', icon: '🛂' },
 ];
 
 function App() {
@@ -170,6 +173,7 @@ function App() {
             <Route path="/exports" element={<Exports />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/webhooks" element={<Webhooks />} />
+            <Route path="/custom-views" element={<CustomViewsPage />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
           </Routes>
         </div>
