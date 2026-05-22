@@ -6,7 +6,7 @@
 
 const express = require('express');
 const router = express.Router();
-const pool = require('../db');
+const { pool } = require('../db/init');
 const { authenticateToken } = require('../middleware/auth');
 
 router.use(authenticateToken);

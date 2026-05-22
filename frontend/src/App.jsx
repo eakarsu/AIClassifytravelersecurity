@@ -27,6 +27,12 @@ import Exports from './pages/Exports';
 import Notifications from './pages/Notifications';
 import Webhooks from './pages/Webhooks';
 import CustomViewsPage from './pages/CustomViewsPage';
+import TravelerWatchlistCorrelation from './pages/TravelerWatchlistCorrelation';
+
+import CodexCustomVizFeature from './pages/CodexCustomVizFeature';
+import CodexOperationsFeature from './pages/CodexOperationsFeature';
+
+import TimelineView from './pages/TimelineView';
 
 const navItems = [
   { section: 'Overview' },
@@ -61,6 +67,7 @@ const navItems = [
   { path: '/webhooks', label: 'Webhooks', icon: '🪝' },
   { section: 'Screening Views' },
   { path: '/custom-views', label: 'Screening Views', icon: '🛂' },
+  { path: '/traveler-watchlist-correlation', label: 'Watchlist Correlation', icon: '🔎' },
 ];
 
 function App() {
@@ -151,6 +158,10 @@ function App() {
 
         <div className="page-content">
           <Routes>
+        <Route path="/insights/timeline" element={<TimelineView />} />
+        <Route path="/codex/custom-viz" element={<CodexCustomVizFeature />} />
+        <Route path="/codex/operations" element={<CodexOperationsFeature />} />
+
             <Route path="/dashboard" element={<Dashboard onStatsLoad={setStats} />} />
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/travelers" element={<Travelers />} />
@@ -174,6 +185,7 @@ function App() {
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/webhooks" element={<Webhooks />} />
             <Route path="/custom-views" element={<CustomViewsPage />} />
+            <Route path="/traveler-watchlist-correlation" element={<TravelerWatchlistCorrelation />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
           </Routes>
         </div>

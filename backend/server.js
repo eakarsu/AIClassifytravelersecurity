@@ -62,6 +62,7 @@ app.use('/api/export', exportRoutes);
 // Audit-recommended additions (notifications, webhooks)
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/webhooks', require('./routes/webhooks'));
+app.use('/api/traveler-watchlist-correlation', require('./routes/travelerWatchlistCorrelation'));
 
 // Health check
 app.get('/api/health', (req, res) => {
