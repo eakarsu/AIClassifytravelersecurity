@@ -10,12 +10,6 @@ const Login = ({ onLogin }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleAutofill = () => {
-    setEmail('admin@travelsecurity.com');
-    setPassword('Admin123!');
-    setError('');
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -78,14 +72,6 @@ const Login = ({ onLogin }) => {
               required
             />
           </div>
-
-          <button
-            type="button"
-            className="autofill-btn"
-            onClick={handleAutofill}
-          >
-            Auto-fill Credentials
-          </button>
 
           <button type="submit" className="login-btn" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In'}

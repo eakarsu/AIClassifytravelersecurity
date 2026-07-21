@@ -1,0 +1,2 @@
+const fs=require('fs');const path=require('path');const {initDB,pool}=require('./init');
+(async()=>{try{await initDB();const dir=path.join(__dirname,'..','migrations');for(const file of fs.readdirSync(dir).filter(x=>x.endsWith('.sql')).sort()){await pool.query(fs.readFileSync(path.join(dir,file),'utf8'));console.log(`applied ${file}`);}await pool.end();}catch(error){console.error(error);process.exitCode=1;}})();
