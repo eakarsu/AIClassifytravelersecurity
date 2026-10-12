@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import api from '../api';
+import AIReport from '../components/AIReport';
 
 const Incidents = () => {
   const [items, setItems] = useState([]);
@@ -32,7 +33,7 @@ const Incidents = () => {
   const fetchItems = async () => {
     try {
       const response = await api.get('/incidents');
-      setItems(response.data);
+      setItems(Array.isArray(response.data?.data) ? response.data.data : Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       toast.error('Failed to load incidents');
     } finally {
@@ -165,7 +166,7 @@ const Incidents = () => {
         location: item.location,
         country: item.country,
       });
-      const text = response.data.analysis || response.data.result || response.data.message || JSON.stringify(response.data, null, 2);
+      const text = response.data.analysis ?? response.data.result ?? response.data.message ?? response.data;
       setAiOutput(text);
     } catch (err) {
       toast.error('AI analysis failed');
@@ -335,24 +336,7 @@ const Incidents = () => {
                 </div>
               )}
 
-              {aiOutput && (
-                <div className="ai-output">
-                  <div className="ai-output-header">
-                    <span className="ai-icon" role="img" aria-label="AI">&#129302;</span>
-                    <span>AI Incident Analysis</span>
-                  </div>
-                  <div className="ai-output-content">
-                    {parseAiOutput(aiOutput).map((section, idx) => (
-                      <div key={idx}>
-                        {section.header && <h5>{section.header}</h5>}
-                        {section.content.map((line, li) => (
-                          <p key={li}>{line}</p>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <AIReport response={aiOutput} loading={aiLoading} title="Incident analysis" />
             </div>
             <div className="modal-footer">
               <button className="btn btn-primary" onClick={() => analyzeIncident(selectedItem)} disabled={aiLoading}>

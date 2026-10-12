@@ -1,3 +1,4 @@
+import AIReportLibrary from "./components/AIReportLibrary";
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation, Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -138,7 +139,7 @@ function App() {
             );
           })}
         </nav>
-      </aside>
+      <AIReportLibrary /></aside>
 
       <main className="main-content">
         <div className="top-bar">

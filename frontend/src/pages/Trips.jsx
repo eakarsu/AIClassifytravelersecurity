@@ -38,7 +38,7 @@ const Trips = () => {
     try {
       setLoading(true);
       const response = await api.get('/trips');
-      setItems(response.data);
+      setItems(Array.isArray(response.data?.data) ? response.data.data : Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       toast.error('Failed to load trips');
     } finally {

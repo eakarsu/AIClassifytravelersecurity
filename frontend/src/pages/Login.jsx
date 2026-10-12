@@ -10,6 +10,26 @@ const Login = ({ onLogin }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const completeLogin = ({ token, user }) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    onLogin(user);
+    navigate('/dashboard');
+  };
+
+  const handleDemoLogin = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      const response = await api.post('/auth/demo-login');
+      completeLogin(response.data);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Demo login is unavailable.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -17,13 +37,7 @@ const Login = ({ onLogin }) => {
 
     try {
       const response = await api.post('/auth/login', { email, password });
-      const { token, user } = response.data;
-
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-
-      onLogin(user);
-      navigate('/dashboard');
+      completeLogin(response.data);
     } catch (err) {
       const message = err.response?.data?.error || err.response?.data?.message || 'Login failed. Please try again.';
       setError(message);
@@ -75,12 +89,12 @@ const Login = ({ onLogin }) => {
 
           <button
             type="button"
-            onClick={() => { setEmail(import.meta.env.VITE_DEMO_EMAIL || ''); setPassword(import.meta.env.VITE_DEMO_PASSWORD || ''); }}
-            disabled={!import.meta.env.VITE_DEMO_EMAIL || !import.meta.env.VITE_DEMO_PASSWORD}
-            aria-label="Auto Fill Demo Credentials"
+            onClick={handleDemoLogin}
+            disabled={loading}
+            aria-label="Log in with the configured demo account"
             style={{ width: '100%', marginBottom: '12px', padding: '10px 14px', borderRadius: '8px', border: '1px solid currentColor', background: 'transparent', cursor: 'pointer' }}
           >
-            Auto Fill Demo Credentials
+            Log in as demo
           </button>
           <button type="submit" className="login-btn" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In'}

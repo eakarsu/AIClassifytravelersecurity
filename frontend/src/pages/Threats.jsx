@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import api from '../api';
+import AIReport from '../components/AIReport';
 
 const Threats = () => {
   const [items, setItems] = useState([]);
@@ -40,7 +41,7 @@ const Threats = () => {
     setLoading(true);
     try {
       const response = await api.get('/threats');
-      setItems(response.data.threats || response.data || []);
+      setItems(Array.isArray(response.data) ? response.data : Array.isArray(response.data?.threats) ? response.data.threats : []);
     } catch (err) {
       toast.error('Failed to fetch threats');
     } finally {
@@ -165,7 +166,7 @@ const Threats = () => {
         threat_type: selectedItem.threat_type,
       });
       const result = response.data;
-      setAiOutput(result.analysis || result.result || result.message || JSON.stringify(result, null, 2));
+      setAiOutput(result.analysis ?? result.result ?? result.message ?? result);
     } catch (err) {
       toast.error('AI threat analysis failed');
     } finally {
@@ -384,12 +385,7 @@ const Threats = () => {
                 </div>
               )}
 
-              {aiOutput && (
-                <div className="ai-output">
-                  <div className="ai-output-header">AI Threat Analysis</div>
-                  <div className="ai-output-content">{parseAiOutput(aiOutput)}</div>
-                </div>
-              )}
+              <AIReport response={aiOutput} loading={aiLoading} title="Threat analysis" />
             </div>
             <div className="modal-footer">
               <button

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../api';
+import FullFieldPresets from '../components/FullFieldPresets';
+import AIReport from '../components/AIReport';
 
 const EvacuationPlanner = () => {
   const [location, setLocation] = useState('');
@@ -36,6 +38,7 @@ const EvacuationPlanner = () => {
       </div>
 
       <form onSubmit={submit} className="card" style={{ padding: 20, marginBottom: 24 }}>
+        <FullFieldPresets value={{location, threatLevel, exitsText}} presets={[{"label": "Bangkok transit", "values": {"location": "Sukhumvit hotel, Bangkok, Thailand", "threatLevel": "medium", "exitsText": "Suvarnabhumi Airport\nDon Mueang Airport"}}, {"label": "Nairobi disruption", "values": {"location": "Westlands office, Nairobi, Kenya", "threatLevel": "high", "exitsText": "Jomo Kenyatta International Airport\nWilson Airport"}}, {"label": "Lisbon weather", "values": {"location": "City center hotel, Lisbon, Portugal", "threatLevel": "low", "exitsText": "Lisbon Airport\nOriente railway station"}}]} disabled={loading} onChange={(next) => { setLocation(next.location); setThreatLevel(next.threatLevel); setExitsText(next.exitsText); }} />
         <label>Current Location</label>
         <input value={location} onChange={(e) => setLocation(e.target.value)} className="form-input" required maxLength={500} placeholder="e.g., Hotel Hilton, Cairo, Egypt" />
 
@@ -55,6 +58,7 @@ const EvacuationPlanner = () => {
         </button>
       </form>
 
+      <AIReport response={plan} title="Evacuation plan" />
       {plan && (
         <div className="card" style={{ padding: 24 }}>
           {plan.priority_route && (
@@ -133,8 +137,6 @@ const EvacuationPlanner = () => {
               <ul style={{ color: '#ef4444' }}>{plan.abort_conditions.map((c, i) => <li key={i}>{c}</li>)}</ul>
             </section>
           )}
-
-          {plan.raw && <pre style={{ background: 'rgba(0,0,0,0.2)', padding: 12, borderRadius: 8 }}>{plan.raw}</pre>}
         </div>
       )}
     </div>

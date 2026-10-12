@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import api from '../api';
+import AIReport from '../components/AIReport';
 
 const Alerts = () => {
   const [items, setItems] = useState([]);
@@ -38,7 +39,7 @@ const Alerts = () => {
     setLoading(true);
     try {
       const response = await api.get('/alerts');
-      setItems(response.data.alerts || response.data || []);
+      setItems(Array.isArray(response.data) ? response.data : Array.isArray(response.data?.alerts) ? response.data.alerts : []);
     } catch (err) {
       toast.error('Failed to fetch alerts');
     } finally {
@@ -158,7 +159,7 @@ const Alerts = () => {
     try {
       const response = await api.post('/ai/classify-alert', selectedItem);
       const result = response.data;
-      setAiOutput(result.classification || result.result || result.message || JSON.stringify(result, null, 2));
+      setAiOutput(result.classification ?? result.result ?? result.message ?? result);
     } catch (err) {
       toast.error('AI classification failed');
     } finally {
@@ -371,12 +372,7 @@ const Alerts = () => {
                 </div>
               )}
 
-              {aiOutput && (
-                <div className="ai-output">
-                  <div className="ai-output-header">AI Classification Result</div>
-                  <div className="ai-output-content">{parseAiOutput(aiOutput)}</div>
-                </div>
-              )}
+              <AIReport response={aiOutput} loading={aiLoading} title="Alert classification" />
             </div>
             <div className="modal-footer">
               <button

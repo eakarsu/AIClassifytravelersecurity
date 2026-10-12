@@ -80,4 +80,12 @@ app.use('/api/geofence-stream', require('./routes/geofenceStream')); // apply pa
 app.use('/api/corporate-travel-white-label', require('./routes/corporateTravelWhiteLabel')); // apply pass 6 — audit custom suggestion
 
 app.use('/api/custom-views', require('./routes/customViews')); // Custom Views: airport traveler security classification (4 endpoints)
+
+// Advisory AI reports only; native execution and approval routes stay unchanged.
+const aiWorkspaceSupport = require("./aiWorkspaceAdapters.cjs");
+const aiWorkspaceDatabase = require("./db/init.js").pool;
+app.use('/api/report-workspace', require("./aiWorkspace.cjs").createAIWorkspaceRouter({
+  pool: aiWorkspaceDatabase, authenticateToken: require("./middleware/auth.js").authenticateToken,
+  aiRateLimiter: aiWorkspaceSupport.createWorkspaceLimiter(), features: require("./aiWorkspaceFeatures.json"),
+}));
 app.listen(PORT, () => console.log(`Backend server running on port ${PORT}`));

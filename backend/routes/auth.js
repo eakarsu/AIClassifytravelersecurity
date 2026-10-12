@@ -50,6 +50,30 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Local development convenience: authenticate the existing configured demo user.
+// Credentials never leave the server and this route does not create an account.
+router.post('/demo-login', async (req, res) => {
+  const address = req.socket.remoteAddress || '';
+  if (process.env.NODE_ENV === 'production' || !['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(address)) {
+    return res.status(404).json({ error: 'Demo login is unavailable.' });
+  }
+  const email = process.env.DEMO_EMAIL;
+  const password = process.env.DEMO_PASSWORD;
+  if (!email || !password) return res.status(503).json({ error: 'Demo credentials are not configured.' });
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = result.rows[0];
+    if (!user || !await bcrypt.compare(password, user.password)) {
+      return res.status(503).json({ error: 'The configured demo account is unavailable.' });
+    }
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    return res.json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role } });
+  } catch (err) {
+    console.error('Demo login error:', err.message);
+    return res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
 // POST /register - Create a new user with hashed password
 router.post('/register', async (req, res) => {
   try {

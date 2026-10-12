@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../api';
+import FullFieldPresets from '../components/FullFieldPresets';
+import AIReport from '../components/AIReport';
 
 const CyberSecurity = () => {
   const [destination, setDestination] = useState('');
@@ -32,6 +34,7 @@ const CyberSecurity = () => {
       </div>
 
       <form onSubmit={submit} className="card" style={{ padding: 20, marginBottom: 24 }}>
+        <FullFieldPresets value={{destination, travelerRole}} presets={[{"label": "Bangkok analyst", "values": {"destination": "Bangkok, Thailand", "travelerRole": "Financial analyst carrying a managed laptop"}}, {"label": "Nairobi executive", "values": {"destination": "Nairobi, Kenya", "travelerRole": "Regional executive using company devices"}}, {"label": "Lisbon journalist", "values": {"destination": "Lisbon, Portugal", "travelerRole": "Journalist handling confidential contacts"}}]} disabled={loading} onChange={(next) => { setDestination(next.destination); setTravelerRole(next.travelerRole); }} />
         <label>Destination</label>
         <input value={destination} onChange={(e) => setDestination(e.target.value)} className="form-input" required maxLength={200} placeholder="e.g., Beijing, China" />
 
@@ -43,6 +46,7 @@ const CyberSecurity = () => {
         </button>
       </form>
 
+      <AIReport response={assessment} title="Cyber security briefing" />
       {assessment && (
         <div className="card" style={{ padding: 24 }}>
           {assessment.overall_cyber_risk && (
@@ -131,8 +135,6 @@ const CyberSecurity = () => {
               <ul style={{ color: '#ef4444' }}>{assessment.role_specific_warnings.map((w, i) => <li key={i}>{w}</li>)}</ul>
             </section>
           )}
-
-          {assessment.raw && <pre style={{ background: 'rgba(0,0,0,0.2)', padding: 12, borderRadius: 8 }}>{assessment.raw}</pre>}
         </div>
       )}
     </div>

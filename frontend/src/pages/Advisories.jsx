@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import api from '../api';
+import AIReport from '../components/AIReport';
 
 const ADVISORY_LEVEL_LABELS = {
   do_not_travel: 'Do Not Travel',
@@ -40,14 +41,14 @@ const Advisories = () => {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState({ advisory_level: 'all', status: 'all' });
   const [formData, setFormData] = useState(emptyForm);
-  const [aiOutput, setAiOutput] = useState('');
+  const [aiOutput, setAiOutput] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
 
   const fetchItems = async () => {
     try {
       setLoading(true);
       const response = await api.get('/advisories');
-      setItems(Array.isArray(response.data) ? response.data : response.data.results || []);
+      setItems(Array.isArray(response.data) ? response.data : Array.isArray(response.data?.results) ? response.data.results : []);
     } catch (err) {
       toast.error('Failed to load advisories');
     } finally {
@@ -131,7 +132,7 @@ const Advisories = () => {
   const handleAiGenerate = async () => {
     if (!selectedItem) return;
     setAiLoading(true);
-    setAiOutput('');
+    setAiOutput(null);
     try {
       const response = await api.post('/ai/generate-advisory', {
         country: selectedItem.country,
@@ -139,7 +140,7 @@ const Advisories = () => {
         description: selectedItem.description,
         key_risks: selectedItem.key_risks,
       });
-      setAiOutput(response.data.summary || response.data.result || JSON.stringify(response.data, null, 2));
+      setAiOutput(response.data.summary ?? response.data.result ?? response.data);
     } catch (err) {
       toast.error('Failed to generate AI summary');
     } finally {
@@ -219,7 +220,7 @@ const Advisories = () => {
             </thead>
             <tbody>
               {filtered.map((item) => (
-                <tr key={item.id} onClick={() => { setSelectedItem(item); setAiOutput(''); }} style={{ cursor: 'pointer' }}>
+                <tr key={item.id} onClick={() => { setSelectedItem(item); setAiOutput(null); }} style={{ cursor: 'pointer' }}>
                   <td><span className={`badge badge-${item.advisory_level}`}>{ADVISORY_LEVEL_LABELS[item.advisory_level] || item.advisory_level}</span></td>
                   <td>{item.title}</td>
                   <td>{item.country}</td>
@@ -299,20 +300,7 @@ const Advisories = () => {
                 </button>
               </div>
 
-              {(aiLoading || aiOutput) && (
-                <div className="ai-output">
-                  <div className="ai-output-header">
-                    <span className="ai-icon">&#9733;</span> AI Generated Summary
-                  </div>
-                  <div className="ai-output-content">
-                    {aiLoading ? (
-                      <div className="ai-loading"><div className="spinner"></div> Generating...</div>
-                    ) : (
-                      aiOutput
-                    )}
-                  </div>
-                </div>
-              )}
+              <AIReport response={aiOutput} loading={aiLoading} title="Advisory summary" />
             </div>
             <div className="modal-footer">
               <button className="btn btn-primary" onClick={() => openEdit(selectedItem)}>Edit</button>

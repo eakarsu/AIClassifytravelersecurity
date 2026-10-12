@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../api';
+import FullFieldPresets from '../components/FullFieldPresets';
+import AIReport from '../components/AIReport';
 
 const ItineraryRiskScore = () => {
   const [tripJson, setTripJson] = useState('{\n  "destination": "Paris, France",\n  "dates": ["2026-06-01", "2026-06-08"],\n  "purpose": "Business"\n}');
@@ -46,6 +48,7 @@ const ItineraryRiskScore = () => {
       </div>
 
       <form onSubmit={submit} className="card" style={{ padding: 20, marginBottom: 24 }}>
+        <FullFieldPresets value={{tripJson, threatsText, advisoriesText}} presets={[{"label": "Bangkok transit", "values": {"tripJson": "{\n  \"destination\": \"Bangkok, Thailand\",\n  \"dates\": [\n    \"2026-11-12\",\n    \"2026-11-18\"\n  ],\n  \"purpose\": \"Client visit\"\n}", "threatsText": "Transit disruption near central station", "advisoriesText": "Exercise increased caution in crowded transit areas"}}, {"label": "Nairobi meeting", "values": {"tripJson": "{\n  \"destination\": \"Nairobi, Kenya\",\n  \"dates\": [\n    \"2026-12-03\",\n    \"2026-12-09\"\n  ],\n  \"purpose\": \"Regional meeting\"\n}", "threatsText": "Demonstration near airport access road", "advisoriesText": "Review local security updates before departure"}}, {"label": "Lisbon conference", "values": {"tripJson": "{\n  \"destination\": \"Lisbon, Portugal\",\n  \"dates\": [\n    \"2027-01-14\",\n    \"2027-01-20\"\n  ],\n  \"purpose\": \"Conference\"\n}", "threatsText": "Heavy rain affecting rail connections", "advisoriesText": "Check transport operator notices"}}]} disabled={loading} onChange={(next) => { setTripJson(next.tripJson); setThreatsText(next.threatsText); setAdvisoriesText(next.advisoriesText); }} />
         <div>
           <label>Trip (JSON)</label>
           <textarea value={tripJson} onChange={(e) => setTripJson(e.target.value)} rows={6} className="form-input" style={{ fontFamily: 'monospace' }} />
@@ -63,6 +66,7 @@ const ItineraryRiskScore = () => {
         </button>
       </form>
 
+      <AIReport response={result} title="Itinerary risk assessment" />
       {result && (
         <div className="card" style={{ padding: 24 }}>
           {result.overall_risk_score !== undefined && (
@@ -95,7 +99,6 @@ const ItineraryRiskScore = () => {
               <ul>{result.watch_indicators.map((w, i) => <li key={i}>{w}</li>)}</ul>
             </section>
           )}
-          {result.raw && <pre style={{ background: 'rgba(0,0,0,0.2)', padding: 12, borderRadius: 8, overflowX: 'auto' }}>{result.raw}</pre>}
         </div>
       )}
     </div>

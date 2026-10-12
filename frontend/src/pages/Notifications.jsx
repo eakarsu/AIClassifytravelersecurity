@@ -13,7 +13,7 @@ const Notifications = () => {
     setLoading(true);
     try {
       const res = await api.get('/notifications');
-      setItems(Array.isArray(res.data) ? res.data : (res.data.notifications || res.data.items || []));
+      setItems(Array.isArray(res.data) ? res.data : Array.isArray(res.data?.notifications) ? res.data.notifications : Array.isArray(res.data?.items) ? res.data.items : []);
       try {
         const c = await api.get('/notifications/unread-count');
         setUnread(c.data.count || c.data.unread || 0);

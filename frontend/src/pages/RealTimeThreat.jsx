@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../api';
+import FullFieldPresets from '../components/FullFieldPresets';
+import AIReport from '../components/AIReport';
 
 const RealTimeThreat = () => {
   const [lat, setLat] = useState('');
@@ -46,6 +48,7 @@ const RealTimeThreat = () => {
       </div>
 
       <form onSubmit={submit} className="card" style={{ padding: 20, marginBottom: 24 }}>
+        <FullFieldPresets value={{lat, lng, eventsText}} presets={[{"label": "Bangkok transit", "values": {"lat": "13.7563", "lng": "100.5018", "eventsText": "Transit disruption near central business district"}}, {"label": "Nairobi demonstration", "values": {"lat": "-1.2921", "lng": "36.8219", "eventsText": "Demonstration near airport access road"}}, {"label": "Lisbon weather", "values": {"lat": "38.7223", "lng": "-9.1393", "eventsText": "Heavy rain affecting rail connections"}}]} disabled={loading} onChange={(next) => { setLat(next.lat); setLng(next.lng); setEventsText(next.eventsText); }} />
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: 12, alignItems: 'end' }}>
           <div>
             <label>Latitude</label>
@@ -66,6 +69,7 @@ const RealTimeThreat = () => {
         </button>
       </form>
 
+      <AIReport response={assessment} title="Real-time threat assessment" />
       {assessment && (
         <div className="card" style={{ padding: 24 }}>
           {assessment.threat_level && (
@@ -119,8 +123,6 @@ const RealTimeThreat = () => {
               ))}
             </section>
           )}
-
-          {assessment.raw && <pre style={{ background: 'rgba(0,0,0,0.2)', padding: 12, borderRadius: 8, overflowX: 'auto' }}>{assessment.raw}</pre>}
         </div>
       )}
     </div>

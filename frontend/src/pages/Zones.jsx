@@ -36,7 +36,7 @@ const Zones = () => {
     setLoading(true);
     try {
       const response = await api.get('/zones');
-      setItems(response.data.zones || response.data || []);
+      setItems(Array.isArray(response.data) ? response.data : Array.isArray(response.data?.zones) ? response.data.zones : []);
     } catch (err) {
       toast.error('Failed to fetch zones');
     } finally {

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import api from '../api';
+import FullFieldPresets from '../components/FullFieldPresets';
+import AIReport from '../components/AIReport';
 
 const MedicalRisk = () => {
   const [destination, setDestination] = useState('');
@@ -34,6 +36,7 @@ const MedicalRisk = () => {
       </div>
 
       <form onSubmit={submit} className="card" style={{ padding: 20, marginBottom: 24 }}>
+        <FullFieldPresets value={{destination, tripDuration, conditionsText}} presets={[{"label": "Bangkok visit", "values": {"destination": "Bangkok, Thailand", "tripDuration": "14 days", "conditionsText": "asthma, seasonal allergies"}}, {"label": "Nairobi project", "values": {"destination": "Nairobi, Kenya", "tripDuration": "21 days", "conditionsText": "diabetes, hypertension"}}, {"label": "Lisbon conference", "values": {"destination": "Lisbon, Portugal", "tripDuration": "7 days", "conditionsText": "penicillin allergy"}}]} disabled={loading} onChange={(next) => { setDestination(next.destination); setTripDuration(next.tripDuration); setConditionsText(next.conditionsText); }} />
         <label>Destination</label>
         <input value={destination} onChange={(e) => setDestination(e.target.value)} className="form-input" required maxLength={200} placeholder="e.g., Bangkok, Thailand" />
 
@@ -48,6 +51,7 @@ const MedicalRisk = () => {
         </button>
       </form>
 
+      <AIReport response={assessment} title="Medical risk assessment" />
       {assessment && (
         <div className="card" style={{ padding: 24 }}>
           {assessment.overall_medical_risk && (
@@ -114,8 +118,6 @@ const MedicalRisk = () => {
               <p>{assessment.travel_insurance_recommendation}</p>
             </section>
           )}
-
-          {assessment.raw && <pre style={{ background: 'rgba(0,0,0,0.2)', padding: 12, borderRadius: 8 }}>{assessment.raw}</pre>}
         </div>
       )}
     </div>

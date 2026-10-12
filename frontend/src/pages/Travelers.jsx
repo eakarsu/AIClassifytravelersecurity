@@ -34,7 +34,7 @@ const Travelers = () => {
     setLoading(true);
     try {
       const response = await api.get('/travelers');
-      setItems(response.data.travelers || response.data || []);
+      setItems(Array.isArray(response.data?.data) ? response.data.data : Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       toast.error('Failed to fetch travelers');
     } finally {

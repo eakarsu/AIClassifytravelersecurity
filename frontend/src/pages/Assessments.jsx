@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import api from '../api';
+import AIReport from '../components/AIReport';
 
 const RISK_LEVELS = ['critical', 'high', 'medium', 'low'];
 
@@ -42,14 +43,14 @@ const Assessments = () => {
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState({ overall_risk: 'all', country: 'all' });
   const [formData, setFormData] = useState(emptyForm);
-  const [aiOutput, setAiOutput] = useState('');
+  const [aiOutput, setAiOutput] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
 
   const fetchItems = async () => {
     try {
       setLoading(true);
       const response = await api.get('/assessments');
-      setItems(Array.isArray(response.data) ? response.data : response.data.results || []);
+      setItems(Array.isArray(response.data) ? response.data : Array.isArray(response.data?.results) ? response.data.results : []);
     } catch (err) {
       toast.error('Failed to load assessments');
     } finally {
@@ -137,14 +138,14 @@ const Assessments = () => {
   const handleAiAssess = async () => {
     if (!selectedItem) return;
     setAiLoading(true);
-    setAiOutput('');
+    setAiOutput(null);
     try {
       const response = await api.post('/ai/assess-risk', {
         name: selectedItem.destination,
         country: selectedItem.country,
         current_alerts: 'Based on current assessment',
       });
-      setAiOutput(response.data.assessment || response.data.result || JSON.stringify(response.data, null, 2));
+      setAiOutput(response.data.assessment ?? response.data.result ?? response.data);
     } catch (err) {
       toast.error('Failed to generate AI risk assessment');
     } finally {
@@ -225,7 +226,7 @@ const Assessments = () => {
             </thead>
             <tbody>
               {filtered.map((item) => (
-                <tr key={item.id} onClick={() => { setSelectedItem(item); setAiOutput(''); }} style={{ cursor: 'pointer' }}>
+                <tr key={item.id} onClick={() => { setSelectedItem(item); setAiOutput(null); }} style={{ cursor: 'pointer' }}>
                   <td>{item.destination}</td>
                   <td>{item.country}</td>
                   <td>{formatDate(item.assessment_date)}</td>
@@ -340,20 +341,7 @@ const Assessments = () => {
                 </button>
               </div>
 
-              {(aiLoading || aiOutput) && (
-                <div className="ai-output">
-                  <div className="ai-output-header">
-                    <span className="ai-icon">&#9733;</span> AI Risk Assessment
-                  </div>
-                  <div className="ai-output-content">
-                    {aiLoading ? (
-                      <div className="ai-loading"><div className="spinner"></div> Assessing...</div>
-                    ) : (
-                      aiOutput
-                    )}
-                  </div>
-                </div>
-              )}
+              <AIReport response={aiOutput} loading={aiLoading} title="Risk assessment" />
             </div>
             <div className="modal-footer">
               <button className="btn btn-primary" onClick={() => openEdit(selectedItem)}>Edit</button>

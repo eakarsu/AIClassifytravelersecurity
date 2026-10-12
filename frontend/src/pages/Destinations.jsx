@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import api from '../api';
+import AIReport from '../components/AIReport';
 
 const RISK_OPTIONS = ['low', 'medium', 'high', 'critical'];
 
@@ -42,7 +43,7 @@ const Destinations = () => {
     try {
       setLoading(true);
       const response = await api.get('/destinations');
-      setItems(response.data);
+      setItems(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       toast.error('Failed to load destinations');
     } finally {
@@ -151,52 +152,6 @@ const Destinations = () => {
     } finally {
       setAiLoading(false);
     }
-  };
-
-  const renderAiOutput = (data) => {
-    if (!data) return null;
-    if (typeof data === 'string') {
-      return <p>{data}</p>;
-    }
-    const entries = Object.entries(data);
-    return (
-      <div>
-        {entries.map(([key, value]) => {
-          const label = key.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-          if (typeof value === 'object' && value !== null) {
-            if (Array.isArray(value)) {
-              return (
-                <div key={key} style={{ marginBottom: '12px' }}>
-                  <strong>{label}:</strong>
-                  <ul style={{ margin: '4px 0 0 20px' }}>
-                    {value.map((v, i) => (
-                      <li key={i}>{typeof v === 'object' ? JSON.stringify(v) : String(v)}</li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            }
-            return (
-              <div key={key} style={{ marginBottom: '12px' }}>
-                <strong>{label}:</strong>
-                <div style={{ marginLeft: '12px', marginTop: '4px' }}>
-                  {Object.entries(value).map(([k, v]) => (
-                    <div key={k}>
-                      <em>{k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}:</em> {String(v)}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          }
-          return (
-            <div key={key} style={{ marginBottom: '8px' }}>
-              <strong>{label}:</strong> {String(value)}
-            </div>
-          );
-        })}
-      </div>
-    );
   };
 
   if (loading) {
@@ -382,7 +337,7 @@ const Destinations = () => {
                     <span className="ai-icon">AI</span> Risk Assessment
                   </div>
                   <div className="ai-output-content">
-                    {renderAiOutput(aiResult)}
+                    <AIReport response={aiResult} title="Destination risk assessment" />
                   </div>
                 </div>
               )}

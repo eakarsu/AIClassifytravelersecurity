@@ -33,7 +33,7 @@ const Contacts = () => {
   const fetchItems = async () => {
     try {
       const response = await api.get('/contacts');
-      setItems(response.data);
+      setItems(Array.isArray(response.data) ? response.data : []);
     } catch (err) {
       toast.error('Failed to load contacts');
     } finally {

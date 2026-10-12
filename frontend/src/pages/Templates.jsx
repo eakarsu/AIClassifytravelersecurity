@@ -32,7 +32,7 @@ const Templates = () => {
     setLoading(true);
     try {
       const response = await api.get('/templates');
-      setItems(response.data.templates || response.data || []);
+      setItems(Array.isArray(response.data) ? response.data : Array.isArray(response.data?.templates) ? response.data.templates : []);
     } catch (err) {
       toast.error('Failed to fetch templates');
     } finally {

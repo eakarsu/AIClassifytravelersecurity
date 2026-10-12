@@ -13,7 +13,7 @@ const Webhooks = () => {
     setLoading(true);
     try {
       const res = await api.get('/webhooks');
-      setItems(Array.isArray(res.data) ? res.data : (res.data.webhooks || res.data.items || []));
+      setItems(Array.isArray(res.data) ? res.data : Array.isArray(res.data?.webhooks) ? res.data.webhooks : Array.isArray(res.data?.items) ? res.data.items : []);
     } catch (err) { toast.error('Failed to fetch webhooks'); }
     setLoading(false);
   };
