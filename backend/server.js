@@ -80,6 +80,10 @@ app.use('/api/geofence-stream', require('./routes/geofenceStream')); // apply pa
 app.use('/api/corporate-travel-white-label', require('./routes/corporateTravelWhiteLabel')); // apply pass 6 — audit custom suggestion
 
 app.use('/api/custom-views', require('./routes/customViews')); // Custom Views: airport traveler security classification (4 endpoints)
+app.use('/api/feature-pack', require('./routes/featurePack').createFeaturePackRouter({
+  authenticate: require('./middleware/auth').authenticateToken,
+  fetchRecords: async () => { try { const r = await require('./db/init').pool.query('SELECT * FROM travelers ORDER BY created_at DESC LIMIT 5000'); return r.rows; } catch (_) { return []; } },
+}));
 
 // Advisory AI reports only; native execution and approval routes stay unchanged.
 const aiWorkspaceSupport = require("./aiWorkspaceAdapters.cjs");

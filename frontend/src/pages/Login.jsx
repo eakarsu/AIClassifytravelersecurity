@@ -9,6 +9,9 @@ const Login = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const demoEmail = import.meta.env.VITE_DEMO_EMAIL;
+  const demoPassword = import.meta.env.VITE_DEMO_PASSWORD;
+  const demoConfigured = Boolean(demoEmail && demoPassword);
 
   const completeLogin = ({ token, user }) => {
     localStorage.setItem('token', token);
@@ -28,6 +31,16 @@ const Login = ({ onLogin }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFillDemoCredentials = async () => {
+    if (demoConfigured) { setEmail(demoEmail); setPassword(demoPassword); setError(''); return; }
+    try {
+      const res = await fetch('/api/auth/demo-credentials', { cache: 'no-store' });
+      const data = await res.json().catch(() => ({}));
+      if (data && data.email && data.password) { setEmail(data.email); setPassword(data.password); setError(''); return; }
+    } catch {}
+    setError('Demo credentials are not configured for this environment.');
   };
 
   const handleSubmit = async (e) => {
@@ -95,6 +108,15 @@ const Login = ({ onLogin }) => {
             style={{ width: '100%', marginBottom: '12px', padding: '10px 14px', borderRadius: '8px', border: '1px solid currentColor', background: 'transparent', cursor: 'pointer' }}
           >
             Log in as demo
+          </button>
+          <button
+            type="button"
+            onClick={handleFillDemoCredentials}
+            disabled={loading}
+            aria-label="Fill demo credentials"
+            style={{ width: '100%', marginBottom: '12px', padding: '10px 14px', borderRadius: '8px', border: '1px solid currentColor', background: 'transparent', cursor: 'pointer' }}
+          >
+            Fill demo credentials
           </button>
           <button type="submit" className="login-btn" disabled={loading}>
             {loading ? 'Signing in...' : 'Sign In'}

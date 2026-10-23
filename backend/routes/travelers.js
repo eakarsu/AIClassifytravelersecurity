@@ -12,12 +12,20 @@ router.get('/', async (req, res) => {
     const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
     const offset = (page - 1) * limit;
 
-    const countResult = await pool.query('SELECT COUNT(*) FROM travelers');
+    const { q, search, status, risk_level, nationality } = req.query;
+    const term = q || search;
+    const cond = []; const vals = []; let ci = 1;
+    if (term) { cond.push(`(first_name ILIKE $${ci} OR last_name ILIKE $${ci} OR email ILIKE $${ci} OR current_location ILIKE $${ci} OR nationality ILIKE $${ci})`); vals.push(`%${term}%`); ci++; }
+    if (status) { cond.push(`status = $${ci++}`); vals.push(status); }
+    if (risk_level) { cond.push(`risk_level = $${ci++}`); vals.push(risk_level); }
+    if (nationality) { cond.push(`nationality ILIKE $${ci++}`); vals.push(`%${nationality}%`); }
+    const where = cond.length ? `WHERE ${cond.join(' AND ')}` : '';
+    const countResult = await pool.query(`SELECT COUNT(*) FROM travelers ${where}`, vals);
     const total = parseInt(countResult.rows[0].count) || 0;
 
     const result = await pool.query(
-      'SELECT * FROM travelers ORDER BY created_at DESC LIMIT $1 OFFSET $2',
-      [limit, offset]
+      `SELECT * FROM travelers ${where} ORDER BY created_at DESC LIMIT $${ci} OFFSET $${ci + 1}`,
+      [...vals, limit, offset]
     );
 
     res.json({
